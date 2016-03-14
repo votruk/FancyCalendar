@@ -1,54 +1,42 @@
 package com.example.ilia.fancycalendar;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-
-//    private final View startButton;
-//    private final View endButton;
-    private RecyclerView recyclerView;
-    private CalendarAdapter calendarAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        startButton = findViewById(R.id.starting_calendar_button);
-//        endButton = findViewById(R.id.ending_calendar_button);
-
         final List<Calendar> calendars = new ArrayList<>();
         final Date currentDate = new Date();
 
-        for (int i = 0; i < 1000; i++) {
-            final Calendar calendar = Calendar.getInstance(Locale.getDefault());
-            calendar.setTime(new Date(currentDate.getTime() + TimeUnit.DAYS.toMillis(i)));
-            calendars.add(calendar);
-        }
+        final CalendarAdapter calendarAdapter = new CalendarAdapter();
 
-        calendarAdapter = new CalendarAdapter(this, calendars);
+        final Calendar startDate = Calendar.getInstance();
+        startDate.set(2016, 2, 11);
 
-        recyclerView = (RecyclerView) findViewById(R.id.calendar_list);
+        final Calendar endDate = Calendar.getInstance();
+        endDate.set(2217, 2, 10);
+
+        calendarAdapter.setRange(startDate, endDate);
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.calendar_list);
         recyclerView.setAdapter(calendarAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 7));
+        final StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(7, StaggeredGridLayoutManager.VERTICAL);
+        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recyclerView.setLayoutManager(manager);
 
     }
-
-
-
-
 
 }
